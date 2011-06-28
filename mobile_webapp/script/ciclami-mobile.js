@@ -43,21 +43,28 @@
 //
 // #### Build Android Webapp
 //
-//		cd mobile_webapp
 //		./build_android.sh
 
 // #### Deploy Couchapp
 //
 //		cd geo_couchapp
-//		couchapp push http://user:pass@your_couch.iriscouch.com/some_db
+//		couchapp push http://user:pass@your-couch.iriscouch.com/some-db
+
+// #### Notes on Couchdb
+//
+//    You should consider getting *your own couch*, as
+//    [Iris Couch](http://www.iriscouch.com) is hosting it for free.
+//		Then you should change in both mobile and couchapp the following variable,
+//    `COUCH_URL`, to something more appropriate like: 
+//    **your-couch**.iriscouch.com/**some-db**
 
 // #### Main Documentation
 //
 // Bellow is the documentation of the main Javascript file from the 
-// *mobile version*. All application functionalities are implemented here.
+// *mobile webapp*. All application functionalities are implemented here.
 //
-// Both are in a sense webapps, so the couchapp is the *web version*. 
-// Note that the two Javascript files are similar.
+// Note that both couchapp and mobile client are quite similar, as they share
+// part of functionality and also part of the Javascript code.
 
 // One variable lives in the global space.
 CICLAMI = (function() {
