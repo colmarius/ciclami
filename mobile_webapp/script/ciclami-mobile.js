@@ -1,27 +1,63 @@
 // **CiclaMI** - "Monitoraggio piste ciclabili a Milano" made easy!
 //
-// Monitored bicycle paths are 
-// [here](http://ciclami.iriscouch.com/ciclami/_design/geo/index.html).
+// This project, used to monitor the work in progress of the bicycle paths 
+// in Milan area, has two main applications:
+// 
+// 1. A **mobile client**, found in directory `mobile_webapp`, runs on Android. 
+//    As the name says it is a *webapp*, so it can be adapted to run on 
+//    other mobile clients (e.g., iPhone, Blackberry.. see 
+//    [Phonegap](http://www.phonegap.com)).
+// 
+// 2. A **web application**, found in directory `geo_couchapp`.
 //
-// This is the main Javascript file where all application functionalities are
-// implemented. 
-// 
-// For a more *native look-and-feel* 
-// [JQuery Mobile - Beta 1](http://www.jquerymobile.com) is used.
-// 
-// In order to access *Android sensors* (like GPS, network connectivity, and 
-// camera) and for obtainig the *native application*
-// [Phonegap - 0.9.5](http://www.phonegap.com) is needed.
+//    * *Couchapp*, because it is a [couchapp](http://couchapp.org/). Means that it
+//      lives in [CouchDb](http://couchdb.apache.org/) - a document-oriented 
+//      database from Apache that can be queried and indexed in a MapReduce 
+//      fashion using JavaScript. 
+//    * *Geo*, because it needs to be deployed on Couchdb with 
+//      [Geocouch](https://github.com/couchbase/geocouch) extension. It also
+//      defines the functions needed to obtain the data from the geocouch 
+//      instance.
+//
+// Monitored bicycle paths can be found 
+// [here](http://ciclami.iriscouch.com/ciclami/_design/geo/index.html)
+//
+// The [source for CiclaMI](https://github.com/colmarius/ciclami) is available 
+// on GitHub.
+//
+// Third-party libraries used:
+//
+//  1. The *native look-and-feel* is handled by
+//    [JQuery Mobile](http://www.jquerymobile.com) (Beta 1).
+//
+//  2. In order to obtain the *native application* and to access the *Android sensors* 
+//    (like GPS, network connectivity and camera) we need
+//    [Phonegap](http://www.phonegap.com) (version 0.9.5).
+//
+//  3. [Docco](http://jashkenas.github.com/docco/), a literate-programming-style 
+//    documentation generator written in 
+//    [CoffeeScript](http://jashkenas.github.com/coffee-script/),
+//    is used to obtain this page when it runs against the main source file
+//    (`mobile_webapp/script/ciclami-mobile.js`).
 
-// #### Build Android webapp
 //
-// Todo!
+// #### Build Android Webapp
+//
+//		cd mobile_webapp
+//		./build_android.sh
 
 // #### Deploy Couchapp
 //
-// Todo!
+//		cd geo_couchapp
+//		couchapp push http://user:pass@your_couch.iriscouch.com/some_db
 
 // #### Main Documentation
+//
+// Bellow is the documentation of the main Javascript file from the 
+// *mobile version*. All application functionalities are implemented here.
+//
+// Both are in a sense webapps, so the couchapp is the *web version*. 
+// Note that the two Javascript files are similar.
 
 // One variable lives in the global space.
 CICLAMI = (function() {
