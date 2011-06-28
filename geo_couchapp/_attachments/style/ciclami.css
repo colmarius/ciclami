@@ -1,0 +1,30 @@
+/* apply the standard css recommended in GMaps tutorial */
+
+html { 
+    height: 100% 
+}
+body { 
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+    overflow: hidden;
+    font-family: Ubuntu;
+}
+
+/* JQuery Mobile style adjustments */
+
+.ui-bar {
+    padding: 1px 0px; 
+}
+.ui-bar-e, .ui-body-e, .ui-btn-down-e {
+    font-family: Ubuntu;
+}
+.ui-btn {
+    background: hsla(40, 20%, 100%, 2); 
+}
+.ui-header {
+    background: -webkit-gradient(linear, left top, left bottom, from(#ffbf00), to(#ff8000));
+}
+.ui-footer {
+    background: -webkit-gradient(linear, left top, left bottom, from(#ffbf00), to(#ff8000));
+}

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>CiclaMI</title>
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<link rel="stylesheet" media="screen" href="style/jquery.mobile-1.0b1.min.css" />
+<link rel="stylesheet" media="screen" href="style/ciclami.css" />
+<link rel="stylesheet" media="screen" href="style/ciclami-mobile.css" />
+<script type="text/javascript" src="vendor/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="vendor/jquery.mobile-1.0b1.min.js"></script>
+<script type="text/javascript" src="script/ciclami-mobile.js"></script>
+<script type="text/javascript" src="phonegap.0.9.5.js"></script>
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true">
+</script>
+<script type="text/javascript">
+function initialize( ){
+  if( CICLAMI.isAndroid( ) ){
+    // If target is Android, initialize app when Phonegap ready.
+    document.addEventListener( "deviceready", CICLAMI.init, false );
+  } else {
+    // Suppose running in browser.
+    CICLAMI.init( );
+  }
+}
+</script>
+</head>
+<body onload="initialize()">
+<div id="splash">
+    <img src="style/images/ciclami-logo.png" />
+    <p class="hint">Loading...</p>
+</div>
+<div id="main" class="noauth" data-role="page" data-theme="e">
+    <div data-role="header">
+        <h1>CiclaMI where?</h1>
+        <a href="#" data-icon="delete" data-iconpos="notext" class="ui-btn-left" id="exit-app-btn"></a>
+        <a href="#options" data-icon="gear" data-iconpos="notext" class="ui-btn-right"></a>
+    </div>
+    <div id="map_canvas" data-role="content"></div>
+    <div class="crosshair">
+    		<div class="top"></div>
+  			<div class="right"></div>
+  			<div class="left"></div>
+  			<div class="bottom"></div>
+		</div>
+    <div data-role="footer" class="ui-bar">
+        <div id="marker-nav" data-role="controlgroup" data-type="horizontal">
+            <a href="#upload-data" data-role="button" id="#save-here-btn">Save here</a>
+        </div>
+    </div> 
+</div>
+<div id="upload-data" class="noauth" data-role="page" data-theme="e">
+    <div data-role="header" data-nobackbtn="true">
+        <h1>Upload data</h1>
+    </div>
+    <div data-role="content">
+        <div data-role="fieldcontain"> 
+            <label for="title">Title:</label> 
+            <input id="addTitleField" name="title" type="text" />
+        </div>
+        <div data-role="fieldcontain"> 
+            <label for="description">Description:</label>
+            <textarea id="addDescriptionField" name="description" cols="40" rows="8"></textarea>
+        </div>
+        <img id="photo-container" src="" />
+        <a href="#" data-role="button" id="take-photo-btn">Take a photo</a>
+        <a href="#" data-role="button" id="upload-data-btn">Upload data</a>
+    </div>
+</div>
+<div id="options" class="noauth" data-role="page" data-theme="e">
+    <div data-role="header" data-nobackbtn="true">
+        <h1>Options</h1>
+    </div>
+    <div data-role="content">
+        <div data-role="fieldcontain">
+            <label for="slider">GPS frequency (seconds):</label>
+           	<input type="range" name="slider" id="gps-frequency" value="15" min="15" max="60"  />
+        </div>
+        <div data-role="fieldcontain">
+            <label for="slider">Image quality (percent):</label>
+             <input type="range" name="slider" id="image-quality" value="50" min="50" max="100"  />
+        </div>
+        <div data-role="fieldcontain">
+            <label for="slider">Draggable map:</label>
+            <select name="slider" id="draggable-map" data-role="slider">
+                <option value="off">Off</option>
+                <option value="on">On</option>
+            </select> 
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,60 @@
+/* application window styles */
+
+div.noauth {
+    visibility: hidden;
+}
+
+/* splash screen styles */
+
+#splash {
+    height: 100%; width: 90%;
+    padding: 0 5%;
+    background: -webkit-gradient(linear, left top, left bottom, from(#ffbf00), to(#ff8000));
+}
+#splash > * {
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+}
+#splash img {
+  padding-top: 25px;
+}
+#splash p.hint {
+    -webkit-border-radius: 4px;
+    background: hsla(40, 20%, 100%, 2);
+    margin: 25px;
+    padding: 10px 0px;
+    color: black;
+    font-size: 0.80em;
+}
+
+/* crosshair styles */
+
+.crosshair {position: absolute; top: 120px; height: 0px;}
+.left, .right, .top, .bottom {position: relative; background-color: #000; float: left;}
+.left, .right {height: 10px; width: 60px;}
+.top, .bottom {height: 60px; width: 10px;}
+.top    {top: 0px; left: 155px;}
+.left   {top: 95px; left: 0px;}
+.right  {top: 95px; left: 180px;}
+.bottom {top: 130px; left: 25px;}
+
+/* navigation control visual treatment */
+
+#marker-nav {
+    text-align: center;
+}
+#marker-nav a .ui-btn-text {
+    font-size: 1.2em;
+}
+
+/* resource details screen styles */
+
+#photo-container {
+    display: none;
+    width: 200px;
+    height: 200px;
+    padding: 5px 20px;
+    margin-left: auto;   
+    margin-right: auto;
+}
