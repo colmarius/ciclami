@@ -1,0 +1,121 @@
+/* apply the standard css recommended in GMaps tutorial */
+
+html { 
+    height: 100% 
+}
+body { 
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+    font-family: Ubuntu;
+}
+
+/* JQuery Mobile style adjustments */
+
+.ui-bar {
+    padding: 1px 0px; 
+}
+.ui-bar-e, .ui-body-e, .ui-btn-down-e {
+    font-family: Ubuntu;
+}
+.ui-btn {
+    color: #777;
+    background: hsla(40, 20%, 100%, 2); 
+}
+.ui-header {
+    background: -webkit-gradient(linear, left top, left bottom, from(#ffbf00), to(#ff8000));
+}
+.ui-footer {
+    background: -webkit-gradient(linear, left top, left bottom, from(#ffbf00), to(#ff8000));
+}
+
+/* navigation control visual treatment */
+
+.marker-nav {
+    text-align: center;
+}
+.marker-nav a {
+    max-width: 32%;
+}
+.marker-nav a.left, .marker-nav a.right {
+     min-width: 90px;
+}
+.marker-nav a .ui-btn-text {
+    font-size: 1.2em;
+}
+
+/* resource details screen styles */
+
+#marker-detail .title {
+    font-size: 1.2em;
+    text-align: center;
+    margin: 0 0 10px;
+    color: #777;
+}
+#marker-detail .date {
+    text-align: center;
+    margin: 10px 0px;
+}
+#marker-detail .description {
+    text-align: left;
+    margin: 10px 10px;
+}
+#marker-detail img.photo-container {
+    display: block;
+    margin-left: auto;   
+    margin-right: auto;
+    resize: both;
+    max-height: 65%;
+}
+
+/* application window styles */
+
+div.noauth {
+    visibility: hidden;
+}
+
+/* splash screen styles */
+
+#splash {
+    height: 100%; width: 90%;
+    padding: 0 5%;
+    background: -webkit-gradient(linear, left top, left bottom, from(#ffbf00), to(#ff8000));
+}
+#splash > * {
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+}
+#splash img {
+  padding-top: 25px;
+}
+#splash p.hint {
+    -webkit-border-radius: 4px;
+    background: hsla(40, 20%, 100%, 2);
+    margin: 25px;
+    padding: 10px 0px;
+    color: black;
+    font-size: 0.80em;
+}
+
+/* crosshair styles */
+
+.crosshair {position: absolute; top: 120px; height: 0px;}
+.crosshair .left, .crosshair .right, .crosshair .top, .crosshair .bottom {position: relative; background-color: #000; float: left;}
+.crosshair .left, .crosshair .right {height: 10px; width: 60px;}
+.crosshair .top, .crosshair .bottom {height: 60px; width: 10px;}
+.crosshair .top    {top: 0px; left: 155px;}
+.crosshair .left   {top: 95px; left: 0px;}
+.crosshair .right  {top: 95px; left: 180px;}
+.crosshair .bottom {top: 130px; left: 25px;}
+
+/* resource details screen styles */
+
+#upload-data img.photo-container {
+    display: none;
+    width: 200px;
+    height: 200px;
+    padding: 5px 20px;
+    margin-left: auto;   
+    margin-right: auto;
+}

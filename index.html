@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CiclaMi</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="shortcut icon" type="image/vnd.microsoft.icon" href="style/images/favicon.ico">
+  <link rel="stylesheet" href="style/jquery.mobile-1.1.0.css" />
+  <link rel="stylesheet" href="style/ciclami.css" />
+  <script type="text/javascript" src="vendor/jquery-1.7.1.min.js"></script>
+  <script type="text/javascript" src="script/jqm-config.js"></script>
+  <script type="text/javascript" src="vendor/jquery.mobile-1.1.0.min.js"></script>
+  <script type="text/javascript" src="vendor/cordova-1.7.0.js"></script>
+  <script type="text/javascript" src="script/ciclami.js"></script>
+  <script type="text/javascript"
+    src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDnfeoyEzv4JX2gks9jSQzGtQaubxg0Ths&sensor=true">
+  </script>
+  <script type="text/javascript" charset="utf-8">
+
+    function onLoad() {
+      if (CICLAMI_MOBILE.isAndroid()) {
+        document.addEventListener("deviceready", onDeviceReady, true);
+      }
+      else CICLAMI.init();
+    }
+
+    function onDeviceReady() { CICLAMI_MOBILE.init(); }
+
+  </script>
+</head>
+<body onload="onLoad();">
+
+  <!-- Splash screen. -->
+  <div id="splash">
+    <img src="style/images/ciclami-logo.png" />
+    <p class="hint">Loading...</p>
+  </div>
+
+  <!-- Mobile: Home page. -->
+  <div id="home-mobile" class="noauth" data-role="page" data-theme="e">
+    <div data-role="header">
+      <h1>CiclaMi where?</h1>
+      <a href="#" data-icon="delete" data-iconpos="notext" class="ui-btn-left" id="exit-app-btn"></a>
+      <a href="#options" data-icon="gear" data-iconpos="notext" class="ui-btn-right"></a>
+    </div>
+    <div id="map_canvas_mobile" data-role="content"></div>
+    <div class="crosshair">
+      <div class="top"></div>
+      <div class="right"></div>
+      <div class="left"></div>
+      <div class="bottom"></div>
+    </div>
+    <div data-role="footer" class="ui-bar">
+      <div class="marker-nav" id="marker-nav-mobile" data-role="controlgroup" data-type="horizontal">
+        <a href="#upload-data" data-role="button" id="#save-here-btn">Save here</a>
+      </div>
+    </div> 
+  </div>
+
+  <!-- Mobile: Upload data page. -->
+  <div id="upload-data" class="noauth" data-role="page" data-theme="e">
+    <div data-role="header" data-position="fixed">
+      <h1>Upload data</h1>
+    </div>
+    <div data-role="content">
+      <div data-role="fieldcontain"> 
+        <label for="title">Title:</label> 
+        <input id="addTitleField" name="title" type="text" />
+      </div>
+      <div data-role="fieldcontain"> 
+        <label for="description">Description:</label>
+        <textarea id="addDescriptionField" name="description" cols="40" rows="8"></textarea>
+      </div>
+      <img id="upload-photo" class="photo-container" src="" />
+      <a href="#" data-role="button" id="take-photo-btn">Take a photo</a>
+      <a href="#" data-role="button" id="upload-data-btn">Upload data</a>
+    </div>
+  </div>
+
+  <!-- Mobile: Options page. -->
+  <div id="options" class="noauth" data-role="page" data-theme="e">
+    <div data-role="header" data-position="fixed">
+      <h1>Options</h1>
+    </div>
+    <div data-role="content">
+      <div data-role="fieldcontain">
+        <label for="slider">GPS frequency (seconds):</label>
+        <input type="range" name="slider" id="gps-frequency" value="15" min="15" max="60" />
+      </div>
+      <div data-role="fieldcontain">
+        <label for="slider">Image quality (percent):</label>
+         <input type="range" name="slider" id="image-quality" value="50" min="50" max="100" />
+      </div>
+      <div data-role="fieldcontain">
+        <label for="slider">Draggable map:</label>
+        <select name="slider" id="draggable-map" data-role="slider">
+          <option value="off">Off</option>
+          <option value="on">On</option>
+        </select> 
+      </div>
+    </div>
+  </div>
+
+  <!-- Web: Home page. -->
+  <div id="home-web" class="noauth" data-role="page" data-theme="e">
+    <div data-role="header">
+      <h1>CiclaMi</h1>
+    </div>
+    <div data-role="content" id="map_canvas_web">
+    </div>
+    <div data-role="footer" class="ui-bar">
+      <div class="marker-nav" data-role="controlgroup" data-type="horizontal">
+        <a href="#" data-role="button" data-icon="arrow-l" class="left">Previous</a>
+        <a href="#marker-detail" data-role="button" class="detail">Info</a>
+        <a href="#" data-role="button" data-icon="arrow-r" data-iconpos="right" class="right">Next</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Web: Marker detail page. -->
+  <div id="marker-detail" class="noauth" data-role="page" data-theme="e">
+    <div data-role="header" data-position="fixed">
+      <h1>Marker Details</h1>
+    </div>
+    <div data-role="content">
+      <div class="title">No title</div>
+      <img class="photo-container" src="" alt="No photo taken"/>
+      <div class="date">No date</div>
+      <div class="description">No description</div>
+    </div>
+  </div>
+
+</body>
+</html>
