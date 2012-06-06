@@ -30,4 +30,4 @@ Shows a map with a crosshair and a marker at the user's position. Allows you to 
 How to run?
 -----------
 
-The android mobile project can be found here: [ciclami-mobile](http://colmarius.github.com/ciclami-mobile)
+The android mobile project can be found here: [ciclami-android](https://github.com/colmarius/ciclami-android)
