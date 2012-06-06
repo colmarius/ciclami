@@ -16,11 +16,11 @@ You will need a web server first:
 
 Once you cloned the repository just run in the root:
 
-  mongoose
+    mongoose
 
 Now you can open a browser window with:
 
-  http://localhost:8080/index.html
+    http://localhost:8080/index.html
 
 CiclaMi Mobile (Hybrid) App
 ===========================
@@ -30,6 +30,4 @@ Shows a map with a crosshair and a marker at the user's position. Allows you to 
 How to run?
 -----------
 
-The android mobile project can be found here:
-
-  [ciclami-mobile](http://colmarius.github.com/ciclami-mobile)
+The android mobile project can be found here: [ciclami-mobile](http://colmarius.github.com/ciclami-mobile)
