@@ -270,11 +270,11 @@
   var Offline = new Cop.Context({
     name: 'Offline',
     initialize: function() {
+      // On desktop.
+      if (!navigator.onLine) this.activate();
       // On mobile: subscribe to Phonegap online/offline events.
       document.addEventListener('offline', function() { Offline.activate(); }, false); 
       document.addEventListener('online',  function() { Offline.deactivate(); }, false);
-      // On desktop.
-      if (!navigator.onLine) this.activate();
     }
   });
 
