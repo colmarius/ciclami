@@ -20,7 +20,13 @@
   </script>
   <script type="text/javascript" charset="utf-8">
 
-    function onLoad() { CICLAMI.init(); }
+    function onLoad() { 
+      if (navigator.userAgent.indexOf('Android') >= 0) {
+        document.addEventListener("deviceready", function() { CICLAMI.init(); }, true);
+      }
+      else CICLAMI.init(); 
+
+    }
 
   </script>
 </head>

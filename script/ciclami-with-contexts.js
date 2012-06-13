@@ -255,7 +255,7 @@
   }
 
   //
-  // Adding contexts and adaptations.
+  // Adding contexts.
   //
 
   var Android = new Cop.Context({ 
@@ -277,6 +277,10 @@
       if (!navigator.onLine) this.activate();
     }
   });
+
+  // 
+  // Adding adaptations.
+  // 
 
   Offline.adapt(CICLAMI, Trait({
 
