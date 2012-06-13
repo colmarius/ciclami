@@ -228,15 +228,6 @@
 
   };
 
-  var CICLAMI_MOBILE = root.CICLAMI_MOBILE = {
-
-    isAndroid: function() {
-      if (navigator.userAgent.indexOf('Android') >= 0) return true;
-      else return false;
-    }
-
-  };
-
   // Helper functions.
 
   function forEach(array, action) {
@@ -270,7 +261,9 @@
   var Android = new Cop.Context({ 
     name: 'Android',
     initialize: function() {
-      if (navigator.userAgent.indexOf('Android') >= 0) this.activate();
+      //if (navigator.userAgent.indexOf('Android') >= 0) this.activate();
+      function onDeviceReady() { Android.activate(); }
+      document.addEventListener("deviceready", onDeviceReady, true);
     }
   });
 
@@ -282,7 +275,6 @@
       document.addEventListener('online',  function() { Offline.deactivate(); }, false);
       // On desktop.
       if (!navigator.onLine) this.activate();
-      else this.deactivate();
     }
   });
 
@@ -296,12 +288,7 @@
 
   Android.adapt(CICLAMI, Trait({
     
-    init: function() {
-      function onDeviceReady() { CICLAMI.onDeviceReady(); }
-      document.addEventListener("deviceready", onDeviceReady, true);
-    },
-
-    onDeviceReady: function(zoomLevel) {
+    init: function(zoomLevel) {
       touchToContinue('#home-mobile');
       // Implicitly triggered when device orientation changes.
       // We need to re-initialize the screen as it contains the map.
@@ -490,7 +477,7 @@
   contextManager.resolveConflict(CICLAMI, [Android, Offline], 
     function(AndroidT, OfflineT) {
       return Trait.compose(OfflineT, 
-        Trait.resolve({init: undefined}, AndroidT));
+        Trait.resolve({ init: undefined }, AndroidT));
   });
 
   contextManager.start();
