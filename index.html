@@ -9,6 +9,10 @@
   <script type="text/javascript" src="vendor/jquery-1.7.1.min.js"></script>
   <script type="text/javascript" src="script/jqm-config.js"></script>
   <script type="text/javascript" src="vendor/jquery.mobile-1.1.0.min.js"></script>
+  <script type="text/javascript" src="vendor/underscore-1.3.1.js"></script>
+  <script type="text/javascript" src="vendor/backbone-0.9.1.js"></script>
+  <script type="text/javascript" src="vendor/traits-0.4.js"></script>
+  <script type="text/javascript" src="vendor/cop-0.1.1.js"></script>
   <script type="text/javascript" src="vendor/cordova-1.7.0.js"></script>
   <script type="text/javascript" src="script/ciclami.js"></script>
   <script type="text/javascript"
@@ -33,6 +37,35 @@
   <div id="splash">
     <img src="style/images/ciclami-logo.png" />
     <p class="hint">Loading...</p>
+  </div>
+
+  <!-- Web: Home page. -->
+  <div id="home-web" class="noauth" data-role="page" data-theme="e">
+    <div data-role="header">
+      <h1>CiclaMi</h1>
+    </div>
+    <div data-role="content" id="map_canvas_web">
+    </div>
+    <div data-role="footer" class="ui-bar">
+      <div class="marker-nav" data-role="controlgroup" data-type="horizontal">
+        <a href="#" data-role="button" data-icon="arrow-l" class="left">Previous</a>
+        <a href="#marker-detail" data-role="button" class="detail">Info</a>
+        <a href="#" data-role="button" data-icon="arrow-r" data-iconpos="right" class="right">Next</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Web: Marker detail page. -->
+  <div id="marker-detail" class="noauth" data-role="page" data-theme="e">
+    <div data-role="header" data-position="fixed">
+      <h1>Marker Details</h1>
+    </div>
+    <div data-role="content">
+      <div class="title">No title</div>
+      <img class="photo-container" src="" alt="No photo taken"/>
+      <div class="date">No date</div>
+      <div class="description">No description</div>
+    </div>
   </div>
 
   <!-- Mobile: Home page. -->
@@ -97,35 +130,6 @@
           <option value="on">On</option>
         </select> 
       </div>
-    </div>
-  </div>
-
-  <!-- Web: Home page. -->
-  <div id="home-web" class="noauth" data-role="page" data-theme="e">
-    <div data-role="header">
-      <h1>CiclaMi</h1>
-    </div>
-    <div data-role="content" id="map_canvas_web">
-    </div>
-    <div data-role="footer" class="ui-bar">
-      <div class="marker-nav" data-role="controlgroup" data-type="horizontal">
-        <a href="#" data-role="button" data-icon="arrow-l" class="left">Previous</a>
-        <a href="#marker-detail" data-role="button" class="detail">Info</a>
-        <a href="#" data-role="button" data-icon="arrow-r" data-iconpos="right" class="right">Next</a>
-      </div>
-    </div>
-  </div>
-
-  <!-- Web: Marker detail page. -->
-  <div id="marker-detail" class="noauth" data-role="page" data-theme="e">
-    <div data-role="header" data-position="fixed">
-      <h1>Marker Details</h1>
-    </div>
-    <div data-role="content">
-      <div class="title">No title</div>
-      <img class="photo-container" src="" alt="No photo taken"/>
-      <div class="date">No date</div>
-      <div class="description">No description</div>
     </div>
   </div>
 
