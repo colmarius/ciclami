@@ -14,17 +14,18 @@
   <script type="text/javascript" src="vendor/traits-0.4.js"></script>
   <script type="text/javascript" src="vendor/cop-0.1.1.js"></script>
   <script type="text/javascript" src="vendor/cordova-1.7.0.js"></script>
-  <script type="text/javascript" src="script/ciclami.js"></script>
+  <script type="text/javascript" src="script/ciclami-with-contexts.js"></script>
   <script type="text/javascript"
     src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDnfeoyEzv4JX2gks9jSQzGtQaubxg0Ths&sensor=true">
   </script>
   <script type="text/javascript" charset="utf-8">
 
     function onLoad() {
-      if (CICLAMI_MOBILE.isAndroid()) {
-        document.addEventListener("deviceready", onDeviceReady, true);
-      }
-      else CICLAMI.init();
+      CICLAMI.init();
+      // if (CICLAMI_MOBILE.isAndroid()) {
+      //   document.addEventListener("deviceready", onDeviceReady, true);
+      // }
+      // else CICLAMI.init();
     }
 
     function onDeviceReady() { CICLAMI_MOBILE.init(); }
