@@ -278,8 +278,8 @@
     name: 'Offline',
     initialize: function() {
       // On mobile: subscribe to Phonegap online/offline events.
-      document.addEventListener('offline', function() { this.activate(); }, false); 
-      document.addEventListener('online',  function() { this.deactivate(); }, false);
+      document.addEventListener('offline', function() { Offline.activate(); }, false); 
+      document.addEventListener('online',  function() { Offline.deactivate(); }, false);
       // On desktop.
       if (!navigator.onLine) this.activate();
       else this.deactivate();
@@ -297,7 +297,7 @@
   Android.adapt(CICLAMI, Trait({
     
     init: function() {
-      function onDeviceReady() { this.onDeviceReady(); }
+      function onDeviceReady() { CICLAMI.onDeviceReady(); }
       document.addEventListener("deviceready", onDeviceReady, true);
     },
 
