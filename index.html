@@ -21,11 +21,10 @@
   <script type="text/javascript" charset="utf-8">
 
     function onLoad() { 
-      if (navigator.userAgent.indexOf('Android') >= 0) {
-        document.addEventListener("deviceready", function() { CICLAMI.init(); }, true);
-      }
-      else CICLAMI.init(); 
-
+      setTimeout(function() { 
+        console.log(Cop.ContextManager.history.join("\n"));
+        CICLAMI.init();
+      }, 1000);
     }
 
   </script>
