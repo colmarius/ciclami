@@ -365,6 +365,7 @@
     },
 
     gotoPosition: function(position, zoomLevel) {
+      // Call basic behavior.
       this._super.gotoPosition(position, zoomLevel);
       var icon = new google.maps.MarkerImage('style/images/marker-active.png',
         new google.maps.Size(64, 31),
@@ -391,6 +392,7 @@
     },
 
     initScreen: function() {
+      // Call basic behavior.
       this._super.initScreen();
       $('.crosshair').css('left', (document.body.clientWidth - 320) / 2 );
       $('.crosshair').css('top', (document.body.clientHeight - 200) / 2 );
