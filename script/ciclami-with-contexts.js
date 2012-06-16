@@ -6,7 +6,10 @@
   var PHOTO_NAME = 'ciclami.jpeg';
 
   var DEFAULT = {
-    ZOOM            : 12,
+    HOME_PAGE       : 'home-web',
+    MAP_CANVAS      : 'map_canvas_web',
+    MAP_DRAGGABLE   : true,
+    MAP_ZOOM        : 12,
     GPS_FREQUENCY   : 15000, // msec
     PICTURE_QUALITY : 50 // percent
   };
@@ -25,15 +28,20 @@
   var CICLAMI = root.CICLAMI = {
 
     init: function(zoomLevel) {
+      var self = this;
       var resizeTimer;
       $(window).resize(function() {
         clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(this.initScreen, 100);
+        resizeTimer = setTimeout(function() { self.initScreen(); }, 100);
       });
-      $("a[href='#marker-detail']").live(supportsTouch ? 'tap' : 'click', this.updateResourceDetails);
-      touchToContinue('#home-web')
       this.run(zoomLevel);
       this.initScreen();
+      this.initHandlers();
+      touchToContinue(DEFAULT.HOME_PAGE);
+    },
+
+    initHandlers: function() {
+      $("a[href='#marker-detail']").live(supportsTouch ? 'tap' : 'click', this.updateResourceDetails);
     },
 
     run: function(zoomLevel) {
@@ -53,25 +61,28 @@
     },
 
     gotoPosition: function(position, zoomLevel) {
-      function onIdleMap() {
-        self.findResources(function() { self.updateDisplay(); });
-      }
       var self = this;
-      map = new google.maps.Map(document.getElementById('map_canvas_web'), {
-        zoom: zoomLevel ? zoomLevel : DEFAULT.ZOOM,
+      map = new google.maps.Map(document.getElementById(DEFAULT.MAP_CANVAS), {
+        zoom: zoomLevel ? zoomLevel : DEFAULT.MAP_ZOOM,
         center: position,
+        draggable: DEFAULT.MAP_DRAGGABLE,
         mapTypeControl: false,
         streetViewControl: false,
         mapTypeId: google.maps.MapTypeId.ROADMAP
       });
-      google.maps.event.addListener(map, 'idle', onIdleMap);
+      google.maps.event.addListener(map, 'idle', function() { self.onIdleMap(); });
+    },
+
+    onIdleMap: function() {
+      var self = this;
+      self.findResources(function() { self.updateDisplay(); });
     },
 
     initScreen: function() {
-      $('#map_canvas_web').height(
+      $('#' + DEFAULT.MAP_CANVAS).height(
         document.body.clientHeight -
-        $("#home-web div[data-role='header']").outerHeight() -
-        $("#home-web div[data-role='footer']").outerHeight() - 30
+        $("#" + DEFAULT.HOME_PAGE + " div[data-role='header']").outerHeight() -
+        $("#" + DEFAULT.HOME_PAGE + " div[data-role='footer']").outerHeight() - 30
       );
       if (map) google.maps.event.trigger(map, 'resize');
     },
@@ -235,7 +246,7 @@
       action(array[i]);
   }
   function navigateTo(pageDivId) {
-    $.mobile.changePage($(pageDivId), 'slide', true, true);
+    $.mobile.changePage($('#' + pageDivId), 'slide', true, true);
     $.mobile.hidePageLoadingMsg();
   }
   function touchToContinue(pageDivId) {
@@ -290,18 +301,18 @@
 
   }));
 
+  Android.adapt(DEFAULT, Trait({
+
+    HOME_PAGE     : 'home-mobile',
+    MAP_CANVAS    : 'map_canvas_mobile',
+    MAP_DRAGGABLE : false
+
+  }));
+
   Android.adapt(CICLAMI, Trait({
-    
-    init: function(zoomLevel) {
-      touchToContinue('#home-mobile');
-      // Implicitly triggered when device orientation changes.
-      // We need to re-initialize the screen as it contains the map.
+
+    initHandlers: function() {
       var self = this;
-      var resizeTimer;
-      $(window).resize(function() {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(self.initScreen, 100);
-      });
       $('#exit-app-btn').tap(function() { 
         exitApp(); 
       });
@@ -320,10 +331,6 @@
       $('#options').live('pagehide', function() {
         self.setNewOptions();
       });
-      // Run the app.
-      this.run(zoomLevel);
-      // Initialize the screen.
-      this.initScreen();
     },
 
     run: function(zoomLevel) {
@@ -345,22 +352,7 @@
     },
 
     gotoPosition: function(position, zoomLevel) {
-      function onIdleMap() {
-        marker.setPosition(map.getCenter());
-      }
-      function onCenterChanged() {
-        window.setTimeout(function() {
-          map.panTo(marker.getPosition());
-        }, 200);
-      }
-      map = new google.maps.Map(document.getElementById('map_canvas_mobile'), {
-        zoom: zoomLevel ? zoomLevel : DEFAULT.ZOOM,
-        center: position,
-        draggable: false,
-        mapTypeControl: false,
-        streetViewControl: false,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-      });
+      this._super.gotoPosition(position, zoomLevel);
       var icon = new google.maps.MarkerImage('style/images/marker-active.png',
         new google.maps.Size(64, 31),
         new google.maps.Point(0,0),
@@ -372,17 +364,21 @@
         icon: icon,
         map: map 
       });
-      google.maps.event.addListener(map, 'idle', onIdleMap);
-      google.maps.event.addListener(map, 'center_changed', onCenterChanged);
+      google.maps.event.addListener(map, 'center_changed', this.onCenterChanged);
+    },
+
+    onIdleMap: function() {
+      marker.setPosition(map.getCenter());
+    },
+
+    onCenterChanged: function() {
+      window.setTimeout(function() {
+        map.panTo(marker.getPosition());
+      }, 200);
     },
 
     initScreen: function() {
-      $('#map_canvas_mobile').height(
-        document.body.clientHeight -
-        $('#home-mobile div[data-role="header"]').outerHeight() -
-        $('#home-mobile div[data-role="footer"]').outerHeight() - 30
-      );
-      if (map) google.maps.event.trigger(map, 'resize');
+      this._super.initScreen();
       $('.crosshair').css('left', (document.body.clientWidth - 320) / 2 );
       $('.crosshair').css('top', (document.body.clientHeight - 200) / 2 );
       if (marker) map.panTo(marker.getPosition());
@@ -435,11 +431,11 @@
         };      
       }
       function uploadWin() {
-        navigateTo('#home-mobile');
+        navigateTo('home-mobile');
         alert('Data uploaded successfully!');
       }
       function uploadFail() {
-        navigateTo('#home-mobile');
+        navigateTo('home-mobile');
         alert('Failed to upload data!');
       }
       var title = $('input#addTitleField').val();
