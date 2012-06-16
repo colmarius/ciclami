@@ -245,15 +245,15 @@
     for (var i = 0; i < array.length; i++)
       action(array[i]);
   }
-  function navigateTo(pageDivId) {
-    $.mobile.changePage($('#' + pageDivId), 'slide', true, true);
+  function navigateTo(pageId) {
+    $.mobile.changePage($('#' + pageId), 'slide', true, true);
     $.mobile.hidePageLoadingMsg();
   }
-  function touchToContinue(pageDivId) {
+  function touchToContinue(pageId) {
     $('#splash').tap(function() {
       $('#splash').hide();
-      navigateTo(pageDivId);
       $('.noauth').removeClass('noauth');
+      navigateTo(pageId);
     });
     $('#splash .hint').text('Touch to continue!');
   }
@@ -272,7 +272,6 @@
   var Android = new Cop.Context({ 
     name: 'Android',
     initialize: function() {
-      //if (navigator.userAgent.indexOf('Android') >= 0) this.activate();
       function onDeviceReady() { Android.activate(); }
       document.addEventListener("deviceready", onDeviceReady, true);
     }
@@ -300,6 +299,20 @@
     }
 
   }));
+
+  Offline.on("activate", function() {
+    navigateTo('info');
+    $('#info .hint').text('You gone offline! Try to restore network connection.');
+  });
+
+  Offline.on("deactivate", function() {
+    navigateTo('info');
+    $('#info .hint').text('Online again! Touch to continue.')
+    $('#info').tap(function() {
+      navigateTo(DEFAULT.HOME_PAGE);
+      $(this).unbind('tap');
+    });
+  });
 
   Android.adapt(DEFAULT, Trait({
 
