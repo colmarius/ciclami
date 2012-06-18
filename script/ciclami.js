@@ -6,7 +6,10 @@
   var PHOTO_NAME = 'ciclami.jpeg';
 
   var DEFAULT = {
-    ZOOM            : 12,
+    HOME_PAGE       : 'home-web',
+    MAP_CANVAS      : 'map_canvas_web',
+    MAP_DRAGGABLE   : true,
+    MAP_ZOOM        : 12,
     GPS_FREQUENCY   : 15000, // msec
     PICTURE_QUALITY : 50 // percent
   };
@@ -22,215 +25,23 @@
   var lastSavedImage   = '';
   var supportsTouch    = 'ontouchstart' in window;
 
-  var CICLAMI_MOBILE = root.CICLAMI_MOBILE = {
-
-    isAndroid: function() {
-      if (navigator.userAgent.indexOf('Android') >= 0) return true;
-      else return false;
-    },
-
-    init: function(zoomLevel) {
-      if (this.isAndroid()) {
-        document.addEventListener('online', function() { 
-          touchToContinue('#home-mobile'); 
-        }, false);
-        document.addEventListener('offline', function() { 
-          touchToExit('No network connection. Try again later.'); 
-        }, false); 
-      }
-      else touchToContinue('#home-mobile'); 
-      // Implicitly triggered when device orientation changes.
-      // We need to re-initialize the screen as it contains the map.
-      var self = this;
-      var resizeTimer;
-      $(window).resize(function() {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(self.initScreen, 100);
-      });
-      $('#exit-app-btn').tap(function() { 
-        exitApp(); 
-      });
-      $('#take-photo-btn').tap(function() { 
-        self.capturePhoto(); 
-      });
-      $('#upload-data-btn').tap(function() { 
-        self.uploadData(); 
-      });
-      $('#home-mobile').live('pageshow', function() { 
-        self.initScreen(); 
-      });
-      $('#upload-data').live('pagebeforeshow', function() { 
-        self.clearFieldsUploadDataPage(); 
-      });
-      $('#options').live('pagehide', function() {
-        self.setNewOptions();
-      });
-      // Run the app.
-      this.run(zoomLevel);
-      // Initialize the screen.
-      this.initScreen();
-    },
-
-    run: function(zoomLevel) {
-      function onSuccess(pos) {
-        var position = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
-        if (map) map.panTo(position); 
-        else self.gotoPosition(position, zoomLevel);
-      }
-      function onError(error) {
-        alert('code: '    + error.code    + '\n' +
-              'message: ' + error.message + '\n');
-      }
-      var self = this;
-      if(posWatchId !== 0)
-        return;
-      posWatchId = navigator.geolocation.watchPosition(onSuccess, onError, 
-        { enableHighAccuracy: true,
-          frequency: DEFAULT.GPS_FREQUENCY });
-    },
-
-    gotoPosition: function(position, zoomLevel) {
-      function onIdleMap() {
-        marker.setPosition(map.getCenter());
-      }
-      function onCenterChanged() {
-        window.setTimeout(function() {
-          map.panTo(marker.getPosition());
-        }, 200);
-      }
-      map = new google.maps.Map(document.getElementById('map_canvas_mobile'), {
-        zoom: zoomLevel ? zoomLevel : DEFAULT.ZOOM,
-        center: position,
-        draggable: false,
-        mapTypeControl: false,
-        streetViewControl: false,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-      });
-      var icon = new google.maps.MarkerImage('style/images/marker-active.png',
-        new google.maps.Size(64, 31),
-        new google.maps.Point(0,0),
-        new google.maps.Point(16, 31)
-      );
-      marker = new google.maps.Marker({
-        position: position, 
-        clickable: true,
-        icon: icon,
-        map: map 
-      });
-      google.maps.event.addListener(map, 'idle', onIdleMap);
-      google.maps.event.addListener(map, 'center_changed', onCenterChanged);
-    },
-
-    initScreen: function() {
-      $('#map_canvas_mobile').height(
-        document.body.clientHeight -
-        $('#home-mobile div[data-role="header"]').outerHeight() -
-        $('#home-mobile div[data-role="footer"]').outerHeight() - 30
-      );
-      if (map) google.maps.event.trigger(map, 'resize');
-      $('.crosshair').css('left', (document.body.clientWidth - 320) / 2 );
-      $('.crosshair').css('top', (document.body.clientHeight - 200) / 2 );
-      if (marker) map.panTo(marker.getPosition());
-    },
-
-    capturePhoto: function() {
-      function camWin(imageData) {
-        var image = document.getElementById('upload-photo');
-        image.style.display = 'block';
-        image.src = 'data:image/jpeg;base64,' + imageData;
-        lastSavedImage = imageData || '';
-        $('#upload-data').trigger('updatelayout');
-      }
-      function camFail(message) {
-        alert('Failed because: ' + message);
-      }
-      navigator.camera.getPicture(camWin, camFail, {
-        quality: DEFAULT.PICTURE_QUALITY,
-        destinationType: Camera.DestinationType.DATA_URL 
-      });
-    },
-
-    clearFieldsUploadDataPage: function() {
-      markerPosition = marker.getPosition();
-      $('input#addTitleField').val('');
-      $('textarea#addDescriptionField').val('');
-      var image = document.getElementById('upload-photo');
-      if (image) {
-        image.style.display = 'none';
-        image.src = lastSavedImage = '';
-      }
-    },
-    
-    uploadData: function() {
-      function makeDoc(options) {
-        return {
-          _attachments: {
-            'ciclami.jpeg': {
-              content_type: 'image/jpeg',
-              data: options.imageData
-            }
-          },
-          geometry: {
-            type: 'Point',
-            coordinates: [options.lng , options.lat]
-          },
-          date: (new Date()).getTime(),
-          title: options.title,
-          description: options.description
-        };      
-      }
-      function uploadWin() {
-        navigateTo('#home-mobile');
-        alert('Data uploaded successfully!');
-      }
-      function uploadFail() {
-        navigateTo('#home-mobile');
-        alert('Failed to upload data!');
-      }
-      var title = $('input#addTitleField').val();
-      var description = $('textarea#addDescriptionField').val();
-      var doc = makeDoc({
-        imageData: lastSavedImage, 
-        lng: markerPosition.lng( ),
-        lat: markerPosition.lat( ),
-        title: title,
-        description: description
-      });
-      $.mobile.showPageLoadingMsg();
-      $.ajax({
-        url: COUCH_URL,
-        type: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify(doc),
-        success: uploadWin,
-        error: uploadFail
-      });
-    },
-
-    setNewOptions: function() {            
-      var mapOptions = {
-        draggable: false  
-      };
-      if($('select#draggable-map')[0].selectedIndex === 1) {
-        mapOptions.draggable = true;
-      }
-      map.setOptions(mapOptions);
-    }
-
-  };
-
   var CICLAMI = root.CICLAMI = {
 
     init: function(zoomLevel) {
+      var self = this;
       var resizeTimer;
       $(window).resize(function() {
         clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(this.initScreen, 100);
+        resizeTimer = setTimeout(function() { self.initScreen(); }, 100);
       });
-      $("a[href='#marker-detail']").live(supportsTouch ? 'tap' : 'click', this.updateResourceDetails);
-      touchToContinue('#home-web')
       this.run(zoomLevel);
       this.initScreen();
+      this.initHandlers();
+      touchToContinue(DEFAULT.HOME_PAGE);
+    },
+
+    initHandlers: function() {
+      $("a[href='#marker-detail']").live(supportsTouch ? 'tap' : 'click', this.updateResourceDetails);
     },
 
     run: function(zoomLevel) {
@@ -250,25 +61,28 @@
     },
 
     gotoPosition: function(position, zoomLevel) {
-      function onIdleMap() {
-        self.findResources(function() { self.updateDisplay(); });
-      }
       var self = this;
-      map = new google.maps.Map(document.getElementById('map_canvas_web'), {
-        zoom: zoomLevel ? zoomLevel : DEFAULT.ZOOM,
+      map = new google.maps.Map(document.getElementById(DEFAULT.MAP_CANVAS), {
+        zoom: zoomLevel ? zoomLevel : DEFAULT.MAP_ZOOM,
         center: position,
+        draggable: DEFAULT.MAP_DRAGGABLE,
         mapTypeControl: false,
         streetViewControl: false,
         mapTypeId: google.maps.MapTypeId.ROADMAP
       });
-      google.maps.event.addListener(map, 'idle', onIdleMap);
+      google.maps.event.addListener(map, 'idle', function() { self.onIdleMap(); });
+    },
+
+    onIdleMap: function() {
+      var self = this;
+      self.findResources(function() { self.updateDisplay(); });
     },
 
     initScreen: function() {
-      $('#map_canvas_web').height(
+      $('#' + DEFAULT.MAP_CANVAS).height(
         document.body.clientHeight -
-        $("#home-web div[data-role='header']").outerHeight() -
-        $("#home-web div[data-role='footer']").outerHeight() - 30
+        $("#" + DEFAULT.HOME_PAGE + " div[data-role='header']").outerHeight() -
+        $("#" + DEFAULT.HOME_PAGE + " div[data-role='footer']").outerHeight() - 30
       );
       if (map) google.maps.event.trigger(map, 'resize');
     },
@@ -431,15 +245,15 @@
     for (var i = 0; i < array.length; i++)
       action(array[i]);
   }
-  function navigateTo(pageDivId) {
-    $.mobile.changePage($(pageDivId), 'slide', true, true);
+  function navigateTo(pageId) {
+    $.mobile.changePage($('#' + pageId), 'slide', true, true);
     $.mobile.hidePageLoadingMsg();
   }
-  function touchToContinue(pageDivId) {
+  function touchToContinue(pageId) {
     $('#splash').tap(function() {
       $('#splash').hide();
       $('.noauth').removeClass('noauth');
-      navigateTo(pageDivId);
+      navigateTo(pageId);
     });
     $('#splash .hint').text('Touch to continue!');
   }
@@ -450,5 +264,237 @@
   function exitApp() {
     navigator.app.exitApp();
   }
+
+  //
+  // Adding contexts.
+  //
+
+  var Android = new Cop.Context({ 
+    name: 'Android',
+    initialize: function() {
+      function onDeviceReady() { Android.activate(); }
+      document.addEventListener("deviceready", onDeviceReady, true);
+    }
+  });
+
+  var Offline = new Cop.Context({
+    name: 'Offline',
+    initialize: function() {
+      // On desktop.
+      if (!navigator.onLine) this.activate();
+      // On mobile: subscribe to Phonegap online/offline events.
+      document.addEventListener("offline", function() { Offline.activate(); }, false); 
+      document.addEventListener("online",  function() { Offline.deactivate(); }, false);
+    }
+  });
+
+  // 
+  // Adding adaptations.
+  // 
+
+  Offline.adapt(CICLAMI, Trait({
+
+    init: function() {
+      touchToExit('No network connection. Try again later.');
+    }
+
+  }));
+
+  Offline.on("activate", function() {
+    navigateTo('info');
+    $('#info .hint').text('You gone offline! Try to restore network connection.');
+  });
+
+  Offline.on("deactivate", function() {
+    navigateTo('info');
+    $('#info .hint').text('Online again! Touch to continue.')
+    $('#info').tap(function() {
+      navigateTo(DEFAULT.HOME_PAGE);
+      $(this).unbind('tap');
+    });
+  });
+
+  Android.adapt(DEFAULT, Trait({
+
+    HOME_PAGE     : 'home-mobile',
+    MAP_CANVAS    : 'map_canvas_mobile',
+    MAP_DRAGGABLE : false
+
+  }));
+
+  Android.adapt(CICLAMI, Trait({
+
+    initHandlers: function() {
+      var self = this;
+      $('#exit-app-btn').tap(function() { 
+        exitApp(); 
+      });
+      $('#take-photo-btn').tap(function() { 
+        self.capturePhoto(); 
+      });
+      $('#upload-data-btn').tap(function() { 
+        self.uploadData(); 
+      });
+      $('#home-mobile').live('pageshow', function() { 
+        self.initScreen(); 
+      });
+      $('#upload-data').live('pagebeforeshow', function() { 
+        self.clearFieldsUploadDataPage(); 
+      });
+      $('#options').live('pagehide', function() {
+        self.setNewOptions();
+      });
+    },
+
+    run: function(zoomLevel) {
+      function onSuccess(pos) {
+        var position = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
+        if (map) map.panTo(position); 
+        else self.gotoPosition(position, zoomLevel);
+      }
+      function onError(error) {
+        alert('code: '    + error.code    + '\n' +
+              'message: ' + error.message + '\n');
+      }
+      var self = this;
+      if(posWatchId !== 0)
+        return;
+      posWatchId = navigator.geolocation.watchPosition(onSuccess, onError, 
+        { enableHighAccuracy: true,
+          frequency: DEFAULT.GPS_FREQUENCY });
+    },
+
+    gotoPosition: function(position, zoomLevel) {
+      // Call basic behavior.
+      this._super.gotoPosition(position, zoomLevel);
+      var icon = new google.maps.MarkerImage('style/images/marker-active.png',
+        new google.maps.Size(64, 31),
+        new google.maps.Point(0,0),
+        new google.maps.Point(16, 31)
+      );
+      marker = new google.maps.Marker({
+        position: position, 
+        clickable: true,
+        icon: icon,
+        map: map 
+      });
+      google.maps.event.addListener(map, 'center_changed', this.onCenterChanged);
+    },
+
+    onIdleMap: function() {
+      marker.setPosition(map.getCenter());
+    },
+
+    onCenterChanged: function() {
+      window.setTimeout(function() {
+        map.panTo(marker.getPosition());
+      }, 200);
+    },
+
+    initScreen: function() {
+      // Call basic behavior.
+      this._super.initScreen();
+      $('.crosshair').css('left', (document.body.clientWidth - 320) / 2 );
+      $('.crosshair').css('top', (document.body.clientHeight - 200) / 2 );
+      if (marker) map.panTo(marker.getPosition());
+    },
+
+    capturePhoto: function() {
+      function camWin(imageData) {
+        var image = document.getElementById('upload-photo');
+        image.style.display = 'block';
+        image.src = 'data:image/jpeg;base64,' + imageData;
+        lastSavedImage = imageData || '';
+        $('#upload-data').trigger('updatelayout');
+      }
+      function camFail(message) {
+        alert('Failed because: ' + message);
+      }
+      navigator.camera.getPicture(camWin, camFail, {
+        quality: DEFAULT.PICTURE_QUALITY,
+        destinationType: Camera.DestinationType.DATA_URL 
+      });
+    },
+
+    clearFieldsUploadDataPage: function() {
+      markerPosition = marker.getPosition();
+      $('input#addTitleField').val('');
+      $('textarea#addDescriptionField').val('');
+      var image = document.getElementById('upload-photo');
+      if (image) {
+        image.style.display = 'none';
+        image.src = lastSavedImage = '';
+      }
+    },
+    
+    uploadData: function() {
+      function makeDoc(options) {
+        return {
+          _attachments: {
+            'ciclami.jpeg': {
+              content_type: 'image/jpeg',
+              data: options.imageData
+            }
+          },
+          geometry: {
+            type: 'Point',
+            coordinates: [options.lng , options.lat]
+          },
+          date: (new Date()).getTime(),
+          title: options.title,
+          description: options.description
+        };      
+      }
+      function uploadWin() {
+        navigateTo('home-mobile');
+        alert('Data uploaded successfully!');
+      }
+      function uploadFail() {
+        navigateTo('home-mobile');
+        alert('Failed to upload data!');
+      }
+      var title = $('input#addTitleField').val();
+      var description = $('textarea#addDescriptionField').val();
+      var doc = makeDoc({
+        imageData: lastSavedImage, 
+        lng: markerPosition.lng( ),
+        lat: markerPosition.lat( ),
+        title: title,
+        description: description
+      });
+      $.mobile.showPageLoadingMsg();
+      $.ajax({
+        url: COUCH_URL,
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(doc),
+        success: uploadWin,
+        error: uploadFail
+      });
+    },
+
+    setNewOptions: function() {            
+      var mapOptions = {
+        draggable: false  
+      };
+      if($('select#draggable-map')[0].selectedIndex === 1) {
+        mapOptions.draggable = true;
+      }
+      map.setOptions(mapOptions);
+    }
+
+  }));
+
+  var contextManager = new Cop.ContextManager({
+    contexts: [Android, Offline]
+  });
+
+  contextManager.resolveConflict(CICLAMI, [Android, Offline], 
+    function(AndroidT, OfflineT) {
+      return Trait.compose(OfflineT, 
+        Trait.resolve({ init: undefined }, AndroidT));
+  });
+
+  contextManager.start();
 
 }).call(this);
