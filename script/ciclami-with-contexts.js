@@ -283,8 +283,8 @@
       // On desktop.
       if (!navigator.onLine) this.activate();
       // On mobile: subscribe to Phonegap online/offline events.
-      document.addEventListener('offline', function() { Offline.activate(); }, false); 
-      document.addEventListener('online',  function() { Offline.deactivate(); }, false);
+      document.addEventListener("offline", function() { Offline.activate(); }, false); 
+      document.addEventListener("online",  function() { Offline.deactivate(); }, false);
     }
   });
 
